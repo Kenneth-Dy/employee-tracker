@@ -194,7 +194,39 @@ const addEmployee = () => {
 }
 
 const updateRole = () => {
-  
+  db.query(`SELECT id, CONCAT(employees.first_name, ' ', employees.last_name) AS name FROM employees`, (err, employees) => {
+    if (err) { console.log(err) }
+    db.query(`SELECT * FROM roles`, (err, roles) => {
+      prompt([
+        {
+          type: 'list',
+          name: 'employeeID',
+          message: `Choose the employee who's role will updated:`,
+          choices: employees.map(data => ({
+            name: data.name,
+            value: data.id
+          }))
+        },
+        {
+          type: 'list',
+          name: 'roleID',
+          message: `Choose their updated role:`,
+          choices: roles.map(data => ({
+            name: data.title,
+            value: data.id
+          }))
+        }
+      ])
+        .then(res => {
+          db.query('UPDATE employees SET role_id = ? WHERE id = ?', [res.roleID, res.employeeID], err => {
+            if (err) { console.log(err) }
+            console.log("Role Updated!")
+            mainMenu()
+          })
+        })
+        .catch(err => console.log(err))
+    })
+  })
 }
 
 mainMenu()
