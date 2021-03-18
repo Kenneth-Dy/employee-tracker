@@ -20,10 +20,10 @@ const mainMenu = () => {
           viewEmployees()
           break
         case 'View Roles':
-          view()
+          viewRoles()
           break
         case 'View Departments':
-          view()
+          viewDepartments()
           break
         case 'Add Departments':
           addDepartment()
@@ -59,7 +59,19 @@ const viewEmployees = () => {
 }
 
 const viewRoles = () => {
-  
+  db.query(`SELECT title, salary FROM roles`, (err, positions) => {
+    if(err) {console.log(err)}
+    console.table(positions)
+    mainMenu()
+  })
+}
+
+const viewDepartments = () => {
+  db.query(`SELECT name FROM departments`, (err, depts) => {
+    if (err) { console.log(err) }
+    console.table(depts)
+    mainMenu()
+  })
 }
 
 const addDepartment = () => {
@@ -179,6 +191,10 @@ const addEmployee = () => {
         .catch(err => console.log(err))
     })
   })
+}
+
+const updateRole = () => {
+  
 }
 
 mainMenu()
